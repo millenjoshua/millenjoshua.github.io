@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nursing Assessment Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:        #0f1117;
+    --surface:   #181c27;
+    --surface2:  #1e2333;
+    --border:    #272d40;
+    --border2:   #323a52;
+    --text:      #e8eaf0;
+    --text2:     #8b93b0;
+    --text3:     #565e7a;
+    --green:     #34d399;
+    --green-bg:  #0d2a1e;
+    --amber:     #fbbf24;
+    --amber-bg:  #2a1f09;
+    --red:       #f87171;
+    --red-bg:    #2a0f0f;
+    --blue:      #60a5fa;
+    --blue-bg:   #0f1e2e;
+    --accent:    #7c6ff7;
+    --accent2:   #5b51d4;
+    --radius:    10px;
+    --radius-sm: 6px;
+  }
+
+  html { font-size: 15px; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+    padding: 0;
+  }
+
+  /* ── Header ── */
+  .site-header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 18px 28px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .header-icon {
+    width: 36px; height: 36px;
+    background: var(--accent);
+    border-radius: 9px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; flex-shrink: 0;
+  }
+  .header-title { font-size: 17px; font-weight: 600; color: var(--text); }
+  .header-sub   { font-size: 12px; color: var(--text2); margin-top: 1px; }
+
+  /* ── Layout ── */
+  .layout {
+    display: flex;
+    min-height: calc(100vh - 73px);
+  }
+
+  /* ── Sidebar nav ── */
+  .sidebar {
+    width: 210px;
+    flex-shrink: 0;
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    padding: 20px 12px;
+    position: sticky;
+    top: 73px;
+    height: calc(100vh - 73px);
+    overflow-y: auto;
+  }
+  .sidebar-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: .1em;
+    color: var(--text3);
+    text-transform: uppercase;
+    padding: 0 8px;
+    margin-bottom: 8px;
+  }
+  .nav-btn {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    padding: 9px 10px;
+    border-radius: var(--radius-sm);
+    border: none;
+    background: transparent;
+    color: var(--text2);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13.5px;
+    font-weight: 400;
+    cursor: pointer;
+    text-align: left;
+    transition: background .15s, color .15s;
+    margin-bottom: 2px;
+  }
+  .nav-btn:hover { background: var(--surface2); color: var(--text); }
+  .nav-btn.active { background: rgba(124,111,247,.15); color: var(--accent); font-weight: 500; }
+  .nav-icon { font-size: 16px; flex-shrink: 0; }
+
+  /* ── Main content ── */
+  .main {
+    flex: 1;
+    padding: 28px;
+    max-width: 860px;
+  }
+
+  .tab-section { display: none; }
+  .tab-section.active { display: block; }
+
+  /* ── Section heading ── */
+  .section-heading {
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 6px;
+  }
+  .section-sub {
+    font-size: 13px;
+    color: var(--text2);
+    margin-bottom: 22px;
+    line-height: 1.5;
+  }
+
+  /* ── Card ── */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 18px 20px;
+    margin-bottom: 14px;
+  }
+  .card-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .card-title .icon { font-size: 16px; }
+
+  /* ── Row (key–value) ── */
+  .row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 13.5px;
+    gap: 12px;
+  }
+  .row:last-child { border-bottom: none; }
+  .row-label { color: var(--text2); flex-shrink: 0; }
+  .row-val { font-weight: 500; color: var(--text); display: flex; align-items: center; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
+  .row-note { font-size: 12px; color: var(--text2); text-align: right; }
+
+  /* ── Badge ── */
+  .badge {
+    display: inline-block;
+    font-size: 11px;
+    padding: 2px 9px;
+    border-radius: 99px;
+    font-weight: 600;
+    font-family: 'DM Mono', monospace;
+    letter-spacing: .02em;
+  }
+  .b-ok     { background: var(--green-bg); color: var(--green); border: 1px solid rgba(52,211,153,.2); }
+  .b-warn   { background: var(--amber-bg); color: var(--amber); border: 1px solid rgba(251,191,36,.2); }
+  .b-danger { background: var(--red-bg);   color: var(--red);   border: 1px solid rgba(248,113,113,.2); }
+  .b-info   { background: var(--blue-bg);  color: var(--blue);  border: 1px solid rgba(96,165,250,.2); }
+
+  /* ── Checklist rows ── */
+  .check-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 7px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 13.5px;
+    color: var(--text);
+    line-height: 1.5;
+  }
+  .check-row:last-child { border-bottom: none; }
+  .check-row .dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+    flex-shrink: 0;
+    margin-top: 7px;
+  }
+  .check-row .dot.green { background: var(--green); }
+
+  /* ── Alert banner ── */
+  .alert {
+    padding: 10px 14px;
+    border-radius: var(--radius-sm);
+    font-size: 13px;
+    margin-bottom: 14px;
+    border-left: 3px solid;
+    line-height: 1.5;
+  }
+  .alert-warn   { background: var(--amber-bg); color: var(--amber);  border-color: var(--amber); }
+  .alert-danger { background: var(--red-bg);   color: var(--red);    border-color: var(--red); }
+  .alert-info   { background: var(--blue-bg);  color: var(--blue);   border-color: var(--blue); }
+
+  /* ── Step (ABCDE / systems) ── */
+  .step {
+    display: flex;
+    gap: 14px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .step:last-child { border-bottom: none; }
+  .step-badge {
+    width: 30px; height: 30px;
+    border-radius: 7px;
+    background: rgba(124,111,247,.15);
+    border: 1px solid rgba(124,111,247,.3);
+    color: var(--accent);
+    font-size: 12px;
+    font-weight: 700;
+    font-family: 'DM Mono', monospace;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .step-title { font-size: 13.5px; font-weight: 600; color: var(--text); margin-bottom: 3px; }
+  .step-detail { font-size: 13px; color: var(--text2); line-height: 1.6; }
+
+  /* ── Vital sign grid ── */
+  .grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 12px; margin-bottom: 14px; }
+
+  /* ── Red flag item ── */
+  .flag-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 9px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 13.5px;
+    color: var(--text);
+  }
+  .flag-item:last-child { border-bottom: none; }
+  .flag-dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--red);
+    flex-shrink: 0;
+  }
+
+  /* ── ISBAR ── */
+  .isbar-item {
+    display: flex;
+    gap: 14px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .isbar-item:last-child { border-bottom: none; }
+  .isbar-letter-box {
+    width: 32px; height: 32px;
+    border-radius: 7px;
+    background: var(--blue-bg);
+    border: 1px solid rgba(96,165,250,.25);
+    color: var(--blue);
+    font-family: 'DM Mono', monospace;
+    font-size: 15px;
+    font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .isbar-label { font-size: 13.5px; font-weight: 600; color: var(--text); margin-bottom: 3px; }
+  .isbar-eg { font-size: 12.5px; color: var(--text2); font-style: italic; line-height: 1.5; }
+
+  /* ── Scrollbar ── */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
+
+  @media (max-width: 640px) {
+    .sidebar { display: none; }
+    .main { padding: 16px; }
+    .mobile-tabs { display: flex !important; }
+  }
+  .mobile-tabs {
+    display: none;
+    overflow-x: auto;
+    gap: 6px;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+    scrollbar-width: none;
+  }
+  .mobile-tabs::-webkit-scrollbar { display: none; }
+  .mob-btn {
+    white-space: nowrap;
+    padding: 6px 14px;
+    border-radius: 99px;
+    border: 1px solid var(--border2);
+    background: transparent;
+    color: var(--text2);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+  .mob-btn.active { background: rgba(124,111,247,.15); color: var(--accent); border-color: rgba(124,111,247,.4); }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-icon">🩺</div>
+  <div>
+    <div class="header-title">Nursing Assessment Guide</div>
+    <div class="header-sub">Quick reference — vital signs, head-to-toe, risk tools & escalation</div>
+  </div>
+</header>
+
+<!-- Mobile tab bar -->
+<div class="mobile-tabs" id="mobileTabs">
+  <button class="mob-btn active" onclick="switchTab(0)">⏱ When to assess</button>
+  <button class="mob-btn" onclick="switchTab(1)">💓 Vital signs</button>
+  <button class="mob-btn" onclick="switchTab(2)">🔍 Head-to-toe</button>
+  <button class="mob-btn" onclick="switchTab(3)">🛡 Risk tools</button>
+  <button class="mob-btn" onclick="switchTab(4)">🚨 Red flags</button>
+</div>
+
+<div class="layout">
+
+  <!-- Sidebar -->
+  <nav class="sidebar">
+    <div class="sidebar-label">Sections</div>
+    <button class="nav-btn active" onclick="switchTab(0)">
+      <span class="nav-icon">⏱</span> When to assess
+    </button>
+    <button class="nav-btn" onclick="switchTab(1)">
+      <span class="nav-icon">💓</span> Vital signs
+    </button>
+    <button class="nav-btn" onclick="switchTab(2)">
+      <span class="nav-icon">🔍</span> Head-to-toe
+    </button>
+    <button class="nav-btn" onclick="switchTab(3)">
+      <span class="nav-icon">🛡</span> Risk tools
+    </button>
+    <button class="nav-btn" onclick="switchTab(4)">
+      <span class="nav-icon">🚨</span> Red flags &amp; escalation
+    </button>
+  </nav>
+
+  <main class="main">
+
+    <!-- ── TAB 0: When to assess ── -->
+    <div class="tab-section active" id="tab0">
+      <div class="section-heading">When to assess</div>
+      <div class="section-sub">Know when a full, routine, or focused assessment is needed.</div>
+
+      <div class="card">
+        <div class="card-title"><span class="icon">🚪</span> On admission / start of shift</div>
+        <div class="check-row"><div class="dot green"></div><span>Full head-to-toe assessment — do this first, every shift</span></div>
+        <div class="check-row"><div class="dot green"></div><span>Full set of vital signs — establish your baseline</span></div>
+        <div class="check-row"><div class="dot green"></div><span>All risk assessments — falls, pressure injury, pain</span></div>
+        <div class="check-row"><div class="dot green"></div><span>Review handover notes and compare to what you find</span></div>
+        <div class="check-row"><div class="dot green"></div><span>Introduce yourself and check patient ID before touching anything</span></div>
+      </div>
+
+      <div class="card">
+        <div class="card-title"><span class="icon">🔄</span> Routine during the shift</div>
+        <div class="check-row"><div class="dot"></div><span>Vital signs as per the observation chart or doctor's orders (e.g. every 4 hours)</span></div>
+        <div class="check-row"><div class="dot"></div><span>Quick visual check every time you enter the room — does the patient look the same?</span></div>
+        <div class="check-row"><div class="dot"></div><span>Pain reassessment after giving analgesia (usually 30–60 min later)</span></div>
+        <div class="check-row"><div class="dot"></div><span>Pressure area check when repositioning (at least every 2 hours for at-risk patients)</span></div>
+      </div>
+
+      <div class="card">
+        <div class="card-title"><span class="icon">🔎</span> Focused assessment — when triggered</div>
+        <div class="check-row"><div class="dot"></div><span>Patient reports a new symptom (pain, SOB, dizziness, nausea)</span></div>
+        <div class="check-row"><div class="dot"></div><span>You notice a change — they look pale, are breathing differently, seem confused</span></div>
+        <div class="check-row"><div class="dot"></div><span>After any procedure, medication, or intervention</span></div>
+        <div class="check-row"><div class="dot"></div><span>After a fall or incident</span></div>
+        <div class="check-row"><div class="dot"></div><span>When a family member tells you something has changed</span></div>
+        <div class="alert alert-warn" style="margin-top:14px; margin-bottom:0;">
+          <strong>Rule of thumb:</strong> If something feels different — assess immediately. Trust your gut and check vitals.
+        </div>
+      </div>
+    </div>
+
+    <!-- ── TAB 1: Vital signs ── -->
+    <div class="tab-section" id="tab1">
+      <div class="section-heading">Vital signs</div>
+      <div class="section-sub">Normal ranges, warning zones, and when to act.</div>
+
+      <div class="card">
+        <div class="card-title"><span class="icon">🌡</span> Temperature</div>
+        <div class="row"><span class="row-label">Normal range</span><span class="row-val">36.1 – 37.2 °C <span class="badge b-ok">normal</span></span></div>
+        <div class="row"><span class="row-label">Low (hypothermia)</span><span class="row-val">&lt; 35.5 °C <span class="badge b-danger">act now</span></span></div>
+        <div class="row"><span class="row-label">Mild fever</span><span class="row-val">37.3 – 38.4 °C <span class="badge b-warn">monitor</span></span></div>
+        <div class="row"><span class="row-label">High fever</span><span class="row-val">&gt; 38.5 °C <span class="badge b-danger">escalate</span></span></div>
+        <div class="row"><span class="row-label">Think about</span><span class="row-note">Infection, sepsis, medication reaction, environment</span></div>
+      </div>
+
+      <div class="grid2">
+        <div class="card">
+          <div class="card-title"><span class="icon">❤️</span> Heart rate (HR)</div>
+          <div class="row"><span class="row-label">Normal</span><span class="row-val">60–100 bpm <span class="badge b-ok">ok</span></span></div>
+          <div class="row"><span class="row-label">Bradycardia</span><span class="row-val">&lt; 50 <span class="badge b-danger">act</span></span></div>
+          <div class="row"><span class="row-label">Tachycardia</span><span class="row-val">&gt; 120 <span class="badge b-danger">act</span></span></div>
+          <div class="row"><span class="row-label">Watch zone</span><span class="row-val">50–59 / 101–119 <span class="badge b-warn">monitor</span></span></div>
+          <div class="row" style="flex-direction:column; align-items:flex-start; gap:3px">
+            <span class="row-label">Also note</span>
+            <span class="row-note" style="text-align:left">Rhythm regular or irregular? Strength of pulse?</span>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title"><span class="icon">📊</span> Blood pressure (BP)</div>
+          <div class="row"><span class="row-label">Normal</span><span class="row-val">90–140 / 60–90 <span class="badge b-ok">ok</span></span></div>
+          <div class="row"><span class="row-label">Hypotension</span><span class="row-val">SBP &lt; 90 <span class="badge b-danger">act</span></span></div>
+          <div class="row"><span class="row-label">Hypertension</span><span class="row-val">SBP &gt; 180 <span class="badge b-danger">act</span></span></div>
+          <div class="row" style="flex-direction:column; align-items:flex-start; gap:3px">
+            <span class="row-label">Also note</span>
+            <span class="row-note" style="text-align:left">Always compare to patient's own baseline, not just textbook normal</span>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title"><span class="icon">🫁</span> Respiratory rate (RR)</div>
+          <div class="row"><span class="row-label">Normal</span><span class="row-val">12–20 breaths/min <span class="badge b-ok">ok</span></span></div>
+          <div class="row"><span class="row-label">Bradypnoea</span><span class="row-val">&lt; 10 <span class="badge b-danger">act</span></span></div>
+          <div class="row"><span class="row-label">Tachypnoea</span><span class="row-val">&gt; 25 <span class="badge b-danger">act</span></span></div>
+          <div class="row" style="flex-direction:column; align-items:flex-start; gap:3px">
+            <span class="row-label">Key tip</span>
+            <span class="row-note" style="text-align:left">RR is the earliest deterioration sign — count a full 60 seconds</span>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title"><span class="icon">💨</span> SpO₂ (oxygen sats)</div>
+          <div class="row"><span class="row-label">Normal</span><span class="row-val">95–100% <span class="badge b-ok">ok</span></span></div>
+          <div class="row"><span class="row-label">Concern</span><span class="row-val">92–94% <span class="badge b-warn">monitor</span></span></div>
+          <div class="row"><span class="row-label">Critical</span><span class="row-val">&lt; 92% <span class="badge b-danger">act now</span></span></div>
+          <div class="row" style="flex-direction:column; align-items:flex-start; gap:3px">
+            <span class="row-label">Note</span>
+            <span class="row-note" style="text-align:left">COPD patients may have a lower acceptable baseline (~88–92%) — check orders</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title"><span class="icon">😣</span> Pain score</div>
+        <div class="row"><span class="row-label">No pain</span><span class="row-val">0 <span class="badge b-ok">no action</span></span></div>
+        <div class="row"><span class="row-label">Mild</span><span class="row-val">1–3 <span class="badge b-info">document, reassess</span></span></div>
+        <div class="row"><span class="row-label">Moderate</span><span class="row-val">4–6 <span class="badge b-warn">consider analgesia, notify if needed</span></span></div>
+        <div class="row"><span class="row-label">Severe</span><span class="row-val">7–10 <span class="badge b-danger">act — analgesia + notify team</span></span></div>
+        <div class="row" style="flex-direction:column; align-items:flex-start; gap:3px">
+          <span class="row-label">Use PQRST to describe pain</span>
+          <span class="row-note" style="text-align:left">Provokes / Quality / Radiates / Severity / Time (onset &amp; duration)</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── TAB 2: Head-to-toe ── -->
+    <div class="tab-section" id="tab2">
+      <div class="section-heading">Head-to-toe assessment</div>
+      <div class="alert alert-info">
+        <strong>Start every assessment with ABCDE first</strong> — it catches life threats before you get to detailed systems.
+      </div>
+
+      <div class="card">
+        <div class="card-title"><span class="icon">🛡</span> ABCDE — do this first</div>
+        <div class="step">
+          <div class="step-badge">A</div>
+          <div><div class="step-title">Airway</div><div class="step-detail">Can the patient speak? Is the airway clear? Listen for stridor, gurgling, or snoring. If they can talk in full sentences → airway is patent.</div></div>
+        </div>
+        <div class="step">
+          <div class="step-badge">B</div>
+          <div><div class="step-title">Breathing</div><div class="step-detail">Count RR for 60 sec. Check SpO₂. Look for chest rise symmetry, use of accessory muscles, nasal flaring. Listen for wheeze or crackles if trained.</div></div>
+        </div>
+        <div class="step">
+          <div class="step-badge">C</div>
+          <div><div class="step-title">Circulation</div><div class="step-detail">HR and BP. Skin colour (pink/pale/mottled/cyanosed). Cap refill (press fingertip 5 sec — should return pink in &lt;2 sec). Skin warm or cold/clammy?</div></div>
+        </div>
+        <div class="step">
+          <div class="step-badge">D</div>
+          <div><div class="step-title">Disability (neuro)</div><div class="step-detail">Use AVPU: Alert / responds to Voice / responds to Pain / Unresponsive. Check orientation — person, place, time. BGL if diabetic or altered consciousness.</div></div>
+        </div>
+        <div class="step">
+          <div class="step-badge">E</div>
+          <div><div class="step-title">Exposure</div><div class="step-detail">Expose the body (with dignity). Check skin — redness, wounds, bruising, drains, catheters, IV sites. Check temperature. Look for rashes or swelling.</div></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title"><span class="icon">🔍</span> Systems — work head to toe after ABCDE</div>
+        <div class="step">
+          <div class="step-badge" style="font-size:10px; width:36px; border-radius:6px;">Neuro</div>
+          <div><div class="step-title">Neurological</div><div class="step-detail">GCS or AVPU. Orientation x3. Pupils equal and reactive to light (PEARL)? Behaviour, mood, speech. Any confusion, agitation, or new drowsiness?</div></div>
+        </div>
+        <div class="step">
+          <div class="step-badge" style="font-size:10px; width:36px; border-radius:6px;">Resp</div>
+          <div><div class="step-title">Respiratory</div><div class="step-detail">Breathing effort. Positioning (sitting upright = may be struggling). Cough — productive? Colour of sputum. Oxygen in use — flow rate, device type.</div></div>
+        </div>
+        <div class="step">
+          <div class="step-badge" style="font-size:10px; width:36px; border-radius:6px;">CVS</div>
+          <div><div class="step-title">Cardiovascular</div><div class="step-detail">HR and rhythm. BP both arms if indicated. Oedema — ankles, legs (pitting?). JVP elevated? IV access — site clean, patent, no redness?</div></div>
+        </div>
+        <div class="step">
+          <div class="step-badge" style="font-size:10px; width:36px; border-radius:6px;">GI</div>
+          <div><div class="step-title">Gastrointestinal / abdo</div><div class="step-detail">Abdomen soft or rigid? Distended? Bowel sounds present? Nausea, vomiting. Last bowel motion. Oral intake — eating and drinking? NG tube if present.</div></div>
+        </div>
+        <div class="step">
+          <div class="step-badge" style="font-size:10px; width:36px; border-radius:6px;">GU</div>
+          <div><div class="step-title">Genitourinary / fluid</div><div class="step-detail">Urine output — adequate? (&gt;0.5 mL/kg/hr). Colour and clarity. IDC if present — draining, secure, bag below bladder. Fluid balance chart up to date?</div></div>
+        </div>
+        <div class="step">
+          <div class="step-badge" style="font-size:10px; width:36px; border-radius:6px;">MSK</div>
+          <div><div class="step-title">Musculoskeletal / mobility</div><div class="step-detail">Can they move independently? Strength equal bilaterally? Gait safe? Any pain on movement. Post-op patients — limb colour, sensation, and movement distal to surgery.</div></div>
+        </div>
+        <div class="step">
+          <div class="step-badge" style="font-size:10px; width:36px; border-radius:6px;">Skin</div>
+          <div><div class="step-title">Skin integrity</div><div class="step-detail">Pressure areas — sacrum, heels, hips, elbows, occiput. Any redness, breakdown, or blistering? Wounds — check dressings. IV sites — no redness, swelling, or leaking.</div></div>
+        </div>
+        <div class="step">
+          <div class="step-badge" style="font-size:10px; width:36px; border-radius:6px;">Psych</div>
+          <div><div class="step-title">Psychosocial</div><div class="step-detail">How is the patient feeling? Anxious, distressed, tearful? Support at home? Understanding of their condition? Cultural or communication needs?</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── TAB 3: Risk tools ── -->
+    <div class="tab-section" id="tab3">
+      <div class="section-heading">Risk tools</div>
+      <div class="section-sub">Assess on admission and each shift.</div>
+
+      <div class="card">
+        <div class="card-title"><span class="icon">🚶</span> Falls risk — assess on admission + each shift</div>
+        <div class="check-row"><div class="dot"></div><span>Previous fall in last 3 months?</span></div>
+        <div class="check-row"><div class="dot"></div><span>On high-risk medications? (sedatives, diuretics, antihypertensives, opioids, hypoglycaemics)</span></div>
+        <div class="check-row"><div class="dot"></div><span>Mobility impaired or uses a walking aid?</span></div>
+        <div class="check-row"><div class="dot"></div><span>Cognitive impairment, confusion, or dementia?</span></div>
+        <div class="check-row"><div class="dot"></div><span>Urinary urgency or incontinence (rushing to toilet)?</span></div>
+        <div class="check-row"><div class="dot"></div><span>Vision problems?</span></div>
+        <div class="alert alert-warn" style="margin-top:14px; margin-bottom:0;">
+          <strong>If high risk →</strong> bed in lowest position, call bell in reach, non-slip socks, yellow falls alert band, supervise mobilisation.
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title"><span class="icon">🩹</span> Pressure injury risk — Braden scale factors</div>
+        <div class="row"><span class="row-label">Sensory perception</span><span class="row-note">Can they feel and respond to pressure discomfort?</span></div>
+        <div class="row"><span class="row-label">Moisture</span><span class="row-note">Is skin exposed to sweat, urine, wound drainage?</span></div>
+        <div class="row"><span class="row-label">Activity</span><span class="row-note">Degree of physical activity — bedbound = highest risk</span></div>
+        <div class="row"><span class="row-label">Mobility</span><span class="row-note">Can they change/control body position?</span></div>
+        <div class="row"><span class="row-label">Nutrition</span><span class="row-note">Poor intake = poor healing and tissue breakdown</span></div>
+        <div class="row"><span class="row-label">Friction / shear</span><span class="row-note">Being pulled up in bed without lifting = shear damage</span></div>
+        <div class="alert alert-warn" style="margin-top:14px; margin-bottom:0;">
+          <strong>If at risk →</strong> 2-hourly repositioning, pressure-relieving mattress, keep skin dry, document findings.
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title"><span class="icon">😣</span> Pain assessment — use PQRST every time</div>
+        <div class="row"><span class="row-label" style="font-weight:600; color:var(--text)">P — Provocation</span><span class="row-note">What makes it better or worse?</span></div>
+        <div class="row"><span class="row-label" style="font-weight:600; color:var(--text)">Q — Quality</span><span class="row-note">Sharp, dull, burning, crushing, aching?</span></div>
+        <div class="row"><span class="row-label" style="font-weight:600; color:var(--text)">R — Radiation</span><span class="row-note">Does it spread? Where to?</span></div>
+        <div class="row"><span class="row-label" style="font-weight:600; color:var(--text)">S — Severity</span><span class="row-note">Score 0–10. Or use FACES if cognitive impairment.</span></div>
+        <div class="row"><span class="row-label" style="font-weight:600; color:var(--text)">T — Time</span><span class="row-note">When did it start? Constant or intermittent?</span></div>
+      </div>
+    </div>
+
+    <!-- ── TAB 4: Red flags ── -->
+    <div class="tab-section" id="tab4">
+      <div class="section-heading">Red flags &amp; escalation</div>
+      <div class="alert alert-danger">
+        <strong>If you see any of these — get help immediately. Do not wait.</strong>
+      </div>
+
+      <div class="card">
+        <div class="card-title"><span class="icon">🚨</span> Red flags — escalate now</div>
+        <div class="flag-item"><div class="flag-dot"></div><span>RR &lt; 10 or &gt; 25 breaths/min</span></div>
+        <div class="flag-item"><div class="flag-dot"></div><span>SpO₂ &lt; 92% (or below patient's individual target)</span></div>
+        <div class="flag-item"><div class="flag-dot"></div><span>HR &lt; 50 or &gt; 120 bpm</span></div>
+        <div class="flag-item"><div class="flag-dot"></div><span>SBP &lt; 90 mmHg or &gt; 180 mmHg</span></div>
+        <div class="flag-item"><div class="flag-dot"></div><span>Temperature &gt; 38.5 °C or &lt; 35.5 °C</span></div>
+        <div class="flag-item"><div class="flag-dot"></div><span>New confusion, agitation, or sudden change in conscious state</span></div>
+        <div class="flag-item"><div class="flag-dot"></div><span>AVPU drops from A → V, V → P, or any deterioration</span></div>
+        <div class="flag-item"><div class="flag-dot"></div><span>Chest pain (especially crushing, radiating to arm/jaw)</span></div>
+        <div class="flag-item"><div class="flag-dot"></div><span>Sudden severe headache or facial droop / arm weakness / slurred speech</span></div>
+        <div class="flag-item"><div class="flag-dot"></div><span>Urine output &lt; 0.5 mL/kg/hr for 2+ hours</span></div>
+        <div class="flag-item"><div class="flag-dot"></div><span>Uncontrolled bleeding or sudden large wound drainage</span></div>
+        <div class="flag-item"><div class="flag-dot"></div><span>Gut feeling — something is just not right</span></div>
+      </div>
+
+      <div class="card">
+        <div class="card-title"><span class="icon">📞</span> How to escalate — use ISBAR</div>
+        <div class="isbar-item">
+          <div class="isbar-letter-box">I</div>
+          <div><div class="isbar-label">Identify</div><div class="isbar-eg">"Hi, this is [your name], student nurse on Ward 4."</div></div>
+        </div>
+        <div class="isbar-item">
+          <div class="isbar-letter-box">S</div>
+          <div><div class="isbar-label">Situation</div><div class="isbar-eg">"I'm calling about Molly Clark, DOB 10/01/90. She is deteriorating — RR is now 28 and SpO₂ has dropped to 90%."</div></div>
+        </div>
+        <div class="isbar-item">
+          <div class="isbar-letter-box">B</div>
+          <div><div class="isbar-label">Background</div><div class="isbar-eg">"She was admitted yesterday for X. Her baseline obs were normal this morning."</div></div>
+        </div>
+        <div class="isbar-item">
+          <div class="isbar-letter-box">A</div>
+          <div><div class="isbar-label">Assessment</div><div class="isbar-eg">"She appears to be in respiratory distress. She is anxious and using accessory muscles to breathe."</div></div>
+        </div>
+        <div class="isbar-item">
+          <div class="isbar-letter-box">R</div>
+          <div><div class="isbar-label">Recommendation</div><div class="isbar-eg">"I believe she needs to be reviewed urgently. Can you come now please?"</div></div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script>
+  function switchTab(n) {
+    document.querySelectorAll('.tab-section').forEach((s, i) => s.classList.toggle('active', i === n));
+    document.querySelectorAll('.nav-btn').forEach((b, i) => b.classList.toggle('active', i === n));
+    document.querySelectorAll('.mob-btn').forEach((b, i) => b.classList.toggle('active', i === n));
+  }
+</script>
+</body>
+</html>
